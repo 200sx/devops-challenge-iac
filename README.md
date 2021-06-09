@@ -15,7 +15,7 @@ To deploy it, use the AWS Console or utilise a cli call as below
 # With LocalStack deployment
 aws cloudformation create-stack --endpoint-url http://localhost:4566 --stack-name secrets-stack --region ap-southeast-2 --template-body file://secrets-stack.yaml
 # With a Real AWS connection/credentials
-ws cloudformation create-stack --stack-name secrets-stack --region ap-southeast-2 --template-body file://secrets-stack.yaml --profile personal
+ws cloudformation create-stack --stack-name secrets-stack --region ap-southeast-2 --template-body file://secrets-stack.yaml
 ```
 Points of consideration;
 - Parameters were created so that they can be passed to the stack-create call as required
@@ -26,15 +26,15 @@ Points of consideration;
 
 
 ### Choice of AWS Service
-AWS Secrets Manager is the best choice for providing an environment for configuring, and retrieving secrets on a needs basis. Reasons it was used;
+**AWS Secrets Manager** is the best choice for providing an environment for configuring, and retrieving secrets on a needs basis. Reasons it was used;
 
-- Automated keystore rotation (if required) and password generation
+- Automated keystore rotation and password generation can be used for end-to-end automated secrets control
 - Alike KMS, RBAC can be implemented per-secret for fine-grained access controls for IAM users/roles
 - API calls to retrieve secrets are logged in CloudTrail, useful for alerting and monitoring purposes
+    - Logs of Lambdas used for key rotation are also logged in CloudWatch for observability
 - If required, Secrets can be shared Cross Account as well
 
 Other tools that could be possibly considered were listed below for completions sake
-
 - SM Parameter Store -> used to store unencrypted K/V pairs such as configuration values, offers no features for security
 - KMS -> used mainly to store encryption keys for AWS services, does not offer tooling for Secrets Management or Rotation
 - S3 -> used to store files, not helpful services to maintain and manage secrets. Please don't use this to store secrets.
